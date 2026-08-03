@@ -23,9 +23,16 @@ def _save(filename: str):
     plt.close()
 
 
+CSV_PATH = os.path.join(
+    os.path.dirname(__file__),
+    "placement_predict_50k Dataset.csv"
+)
+
 def run_eda() -> dict:
-    data = load_data()
+    data = load_data(CSV_PATH)
+
     charts = []
+
 
     #MISSING VALUES
     print("\n"+"="*80)
@@ -44,27 +51,28 @@ def run_eda() -> dict:
         plt.xticks(rotation=45, ha="right")
         plt.ylabel("Missing %")
         plt.title("Missing values by column")
-        _save("missing_values.png")
+        _save(_chart_path("missing_values.png"))
         charts.append("missing_values.png")
 
-    #numeric NaNs filled with median so downstream stats/pplots don't break
-    numeric_cols = data.select_dtypes(include=[np.number]).columns.tolist()
-    for col in numeric_cols:
-        if data[col].isnull().sum()>0:
-            data[col].filename(data[col].median)
-
     #Duplicates
+    print("\n" + "=" * 80)
+    print("4.Duplicate Rows")
+    print("=" * 80)
+    print("Duplicate rows:", data.duplicated().sum())
 
-    #Target variable distribution(placement status)
-    target_counts = data["PLacementStatus"].value_counts().to_dict()
+    # Target variable distribution (placement status)
+
+    target_counts = data["PlacementStatus"].value_counts().to_dict()
     plt.figure()
-    sns.countplot(x="PlacementStatus",data=data)
+    sns.countplot(x="PlacementStatus", data=data)
     plt.xlabel("Placement Status (0 = Not placed, 1 = placed)")
     plt.ylabel("Count")
     plt.title("Placement Status Distribution")
-    show()
+    _save(_chart_path("placement_status.png"))
+    charts.append("placement_status.png")
 
 
 
 if __name__ == "__main__":
-    run_eda()
+    result = run_eda()
+    print(result)

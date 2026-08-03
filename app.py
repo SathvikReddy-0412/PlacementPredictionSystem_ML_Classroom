@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from load_data import get_data_summary
+from placement_eda import run_eda
 
 app = Flask(__name__)
 
