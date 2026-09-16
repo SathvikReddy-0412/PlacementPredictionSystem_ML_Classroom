@@ -1,25 +1,91 @@
 import os
 import pandas as pd
 
-DATA_PATH = r"D:\@KLU\2nd Year\2026 Project Based Learning Semester 4\Machine Learning\PlacementPredictionSystem_ML_Classroom\placement_predict_50k Dataset.csv"
 
-def load_data(path: str = DATA_PATH) -> pd.DataFrame:
-    if not os.path.exists(path):
-        raise FileNotFoundError(path)
-    df = pd.read_csv(path)
+# =========================================================
+# DATASET PATH
+# =========================================================
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+DATASET_PATH = os.path.join(
+    BASE_DIR,
+    "placement_predict_50k Dataset (3) 1(in).csv"
+)
+
+
+# =========================================================
+# LOAD DATASET
+# =========================================================
+
+def load_data():
+
+    if not os.path.exists(DATASET_PATH):
+        raise FileNotFoundError(
+            f"Dataset not found:\n{DATASET_PATH}"
+        )
+
+    df = pd.read_csv(DATASET_PATH)
+
     return df
 
-def get_data_summary() -> dict:
+
+# =========================================================
+# DATASET SUMMARY
+# =========================================================
+
+def get_data_summary():
+
     df = load_data()
-    summary = {
-        "n_rows": df.shape[0],
-        "n_cols": df.shape[1],
-        "columns": list(df.columns),
-        "dtypes": {col: str(df[col].dtype) for col in df.columns},
-        "missing_counts": {col: int(df[col].isnull().sum()) for col in df.columns},
-        "preview": df.head(10).to_dict("records"),
+
+    # Convert NaN values to safe values for Jinja
+    missing_counts = (
+        df.isnull()
+        .sum()
+        .to_dict()
+    )
+
+    dtypes = {
+        column: str(df[column].dtype)
+        for column in df.columns
     }
-    return summary
+
+    preview = (
+        df.head(10)
+        .fillna("")
+        .to_dict(orient="records")
+    )
+
+    return {
+        "n_rows": int(df.shape[0]),
+
+        "n_cols": int(df.shape[1]),
+
+        "columns": df.columns.tolist(),
+
+        "dtypes": dtypes,
+
+        "missing_counts": missing_counts,
+
+        "preview": preview
+    }
+
+
+# =========================================================
+# TEST
+# =========================================================
 
 if __name__ == "__main__":
-    print(get_data_summary())
+
+    df = load_data()
+
+    print("=" * 60)
+    print("DATASET LOADED SUCCESSFULLY")
+    print("=" * 60)
+
+    print("Rows:", df.shape[0])
+    print("Columns:", df.shape[1])
+
+    print("\nColumns:")
+    for column in df.columns:
+        print("-", column)
