@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DBSCAN Clustering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="topbar">
+        <h1>Placement Prediction Project</h1>
+    </header>
+
+    <div class="layout">
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+            <div class="page-header">
+                <h2>DBSCAN Clustering</h2>
+                <p class="subtitle">Density-Based Spatial Clustering of Applications with Noise for student placement outlier detection and core skill cluster identification.</p>
+            </div>
+
+            {% if error %}
+                <div class="error-banner">{{ error }}</div>
+            {% endif %}
+
+            {% if dbscan %}
+            <!-- CONTROL FORM -->
+            <div class="dashboard-card">
+                <h3 class="card-title">DBSCAN Parameters</h3>
+                <form method="POST" action="/dbscan" class="filter-form">
+                    <div class="form-group">
+                        <label for="min_samples">Min Samples</label>
+                        <select name="min_samples" id="min_samples" class="form-control">
+                            <option value="3">3 Samples</option>
+                            <option value="5" selected>5 Samples (Default)</option>
+                            <option value="10">10 Samples</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-teal">Run DBSCAN</button>
+                </form>
+            </div>
+
+            <!-- 6 STAT METRIC CARDS ROW -->
+            <div class="metrics-grid six-cols">
+                <div class="stat-card border-blue">
+                    <span class="stat-label">CLUSTERS</span>
+                    <span class="stat-value">{{ dbscan.clusters_count }}</span>
+                    <span class="stat-sub">Excludes Noise (-1)</span>
+                </div>
+
+                <div class="stat-card border-teal">
+                    <span class="stat-label">CORE POINTS</span>
+                    <span class="stat-value">{{ dbscan.core_points }}</span>
+                    <span class="stat-sub">Dense Core Region</span>
+                </div>
+
+                <div class="stat-card border-orange">
+                    <span class="stat-label">BORDER POINTS</span>
+                    <span class="stat-value">{{ dbscan.border_points }}</span>
+                    <span class="stat-sub">Cluster Edge Points</span>
+                </div>
+
+                <div class="stat-card border-red">
+                    <span class="stat-label">NOISE POINTS</span>
+                    <span class="stat-value">{{ dbscan.noise_points }}</span>
+                    <span class="stat-sub">Outliers Label (-1)</span>
+                </div>
+
+                <div class="stat-card border-purple">
+                    <span class="stat-label">EPSILON (&epsilon;)</span>
+                    <span class="stat-value">{{ dbscan.epsilon }}</span>
+                    <span class="stat-sub">Knee Point derived</span>
+                </div>
+
+                <div class="stat-card border-teal">
+                    <span class="stat-label">SILHOUETTE SCORE</span>
+                    <span class="stat-value">{{ dbscan.silhouette_score }}</span>
+                    <span class="stat-sub">Cluster separation</span>
+                </div>
+            </div>
+
+            <!-- TWO COLUMN CHARTS GRID -->
+            <div class="charts-two-col">
+                <div class="dashboard-card">
+                    <h3 class="card-title">K-Distance Knee Graph (Eps Detection)</h3>
+                    <div class="chart-wrapper">
+                        <img src="{{ dbscan.knee_chart_url }}" alt="K-Distance Knee Graph" class="responsive-chart">
+                    </div>
+                </div>
+
+                <div class="dashboard-card">
+                    <h3 class="card-title">DBSCAN Clusters & Point Classifications</h3>
+                    <div class="chart-wrapper">
+                        <img src="{{ dbscan.scatter_chart_url }}" alt="DBSCAN Clusters Scatter Plot" class="responsive-chart">
+                    </div>
+                </div>
+            </div>
+
+            <!-- SUMMARY TABLE CARD -->
+            <div class="dashboard-card full-width">
+                <h3 class="card-title text-uppercase">DBSCAN CLUSTER PROFILES & CLASSIFICATION SUMMARY</h3>
+                <div class="table-responsive">
+                    <table class="custom-data-table">
+                        <thead>
+                            <tr>
+                                <th>Group</th>
+                                <th>Total Students</th>
+                                <th>Core Points</th>
+                                <th>Border Points</th>
+                                <th>Avg CGPA</th>
+                                <th>Avg Coding Score</th>
+                                <th>Avg Aptitude Score</th>
+                                <th>Avg Internships</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in dbscan.summary_table %}
+                            <tr class="{% if row.is_noise %}row-noise{% endif %}">
+                                <td><strong>{{ row.group }}</strong></td>
+                                <td>{{ row.total_points }}</td>
+                                <td>{{ row.core_points }}</td>
+                                <td>{{ row.border_points }}</td>
+                                <td>{{ row.avg_cgpa }}</td>
+                                <td>{{ row.avg_coding }}</td>
+                                <td>{{ row.avg_aptitude }}</td>
+                                <td>{{ row.avg_internships }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+</body>
+</html>

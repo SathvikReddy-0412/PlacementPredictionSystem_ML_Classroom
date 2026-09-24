@@ -277,6 +277,47 @@ def boosting():
         )
 
 
+from flask import request
+from clustering_pipeline import run_kmeans_pipeline, run_hierarchical_pipeline, run_dbscan_pipeline
+
+# =========================================================
+# CLUSTERING & PREDICTOR ROUTES
+# =========================================================
+
+@app.route("/kmeans", methods=["GET", "POST"])
+def kmeans():
+    try:
+        method = request.form.get("method", "Manual")
+        k = int(request.form.get("k", 3))
+        result = run_kmeans_pipeline(method=method, k=k)
+        return render_template("kmeans.html", active="kmeans", kmeans=result, error=None)
+    except Exception as e:
+        return render_template("kmeans.html", active="kmeans", kmeans=None, error=str(e))
+
+@app.route("/hierarchical-clustering", methods=["GET", "POST"])
+def hierarchical_clustering():
+    try:
+        method = request.form.get("method", "ward")
+        k = int(request.form.get("k", 2))
+        result = run_hierarchical_pipeline(method=method, k=k)
+        return render_template("hierarchical_clustering.html", active="hierarchical-clustering", hierarchical=result, error=None)
+    except Exception as e:
+        return render_template("hierarchical_clustering.html", active="hierarchical-clustering", hierarchical=None, error=str(e))
+
+@app.route("/dbscan", methods=["GET", "POST"])
+def dbscan():
+    try:
+        min_samples = int(request.form.get("min_samples", 5))
+        result = run_dbscan_pipeline(min_samples=min_samples)
+        return render_template("dbscan.html", active="dbscan", dbscan=result, error=None)
+    except Exception as e:
+        return render_template("dbscan.html", active="dbscan", dbscan=None, error=str(e))
+
+@app.route("/predictor")
+def predictor():
+    return render_template("predictor.html", active="predictor", error=None)
+
+
 # =========================================================
 # RUN APPLICATION
 # =========================================================

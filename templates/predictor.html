@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Placement Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <header class="topbar">
+        <h1>Placement Prediction Project</h1>
+    </header>
+
+    <div class="layout">
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+            <h2>Placement Predictor</h2>
+            <p class="description">Predict student placement status and salary packages using trained machine learning models.</p>
+
+            {% if error %}
+                <div class="error-banner">{{ error }}</div>
+            {% endif %}
+
+            <div class="dashboard-card">
+                <h3 class="card-title">Placement Predictor Module</h3>
+                <p class="card-desc">Input candidate academic credentials, test scores, and skills to obtain real-time placement status predictions.</p>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

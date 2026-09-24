@@ -1,0 +1,92 @@
+<nav class="sidebar">
+    <ul class="nav-list">
+
+        <!-- DATA LOADING -->
+        <li>
+            <a href="{{ url_for('data_loading') }}" class="nav-item {% if active == 'data-loading' or request.path == '/data-loading' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Data Loading</span>
+            </a>
+        </li>
+
+        <!-- EDA -->
+        <li>
+            <a href="{{ url_for('eda') }}" class="nav-item {% if active == 'eda' or request.path == '/eda' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">EDA</span>
+            </a>
+        </li>
+
+        <!-- PREPROCESSING -->
+        <li>
+            <a href="{{ url_for('preprocessing') }}" class="nav-item {% if active == 'preprocessing' or request.path == '/preprocessing' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Preprocessing</span>
+            </a>
+        </li>
+
+        <!-- LINEAR REGRESSION -->
+        <li>
+            <a href="{{ url_for('linear_regression') }}" class="nav-item {% if active == 'linear-regression' or request.path == '/linear-regression' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Linear Regression</span>
+            </a>
+        </li>
+
+        <!-- LOGISTIC REGRESSION -->
+        <li>
+            <a href="{{ url_for('logistic_regression') }}" class="nav-item {% if active == 'logistic-regression' or request.path == '/logistic-regression' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Logistic Regression</span>
+            </a>
+        </li>
+
+        <!-- DECISION TREES -->
+        <li>
+            <a href="{{ url_for('decision_tree') }}" class="nav-item {% if active in ['decision-tree', 'random-forest', 'bagging', 'boosting'] or request.path in ['/decision-tree', '/random-forest', '/bagging', '/boosting'] %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Decision Trees</span>
+            </a>
+        </li>
+
+        <!-- CLUSTERING -->
+        <li class="nav-group">
+            <details {% if active in ['clustering', 'kmeans', 'hierarchical-clustering', 'dbscan'] or request.path in ['/kmeans', '/hierarchical-clustering', '/dbscan'] %}open{% else %}open{% endif %}>
+                <summary class="nav-item nav-summary">
+                    <span class="dot"></span>
+                    <span class="nav-text">Clustering</span>
+                    <span class="arrow">▲</span>
+                </summary>
+                <ul class="sub-menu">
+                    <li>
+                        <a href="/kmeans" class="sub-item {% if active == 'kmeans' or request.path == '/kmeans' %}active{% endif %}">
+                            <span class="tree-branch">├─</span>
+                            <span class="sub-text">K-Means</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/hierarchical-clustering" class="sub-item {% if active == 'hierarchical-clustering' or request.path == '/hierarchical-clustering' %}active{% endif %}">
+                            <span class="tree-branch">├─</span>
+                            <span class="sub-text">Hierarchical Clustering</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/dbscan" class="sub-item {% if active == 'dbscan' or request.path == '/dbscan' %}active{% endif %}">
+                            <span class="tree-branch">└─</span>
+                            <span class="sub-text">DBSCAN</span>
+                        </a>
+                    </li>
+                </ul>
+            </details>
+        </li>
+
+        <!-- PLACEMENT PREDICTOR -->
+        <li>
+            <a href="/predictor" class="nav-item {% if active == 'predictor' or request.path == '/predictor' %}active{% endif %}">
+                <span class="dot"></span>
+                <span class="nav-text">Placement Predictor</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>

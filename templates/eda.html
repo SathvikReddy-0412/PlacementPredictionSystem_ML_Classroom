@@ -10,6 +10,8 @@
 
     <title>EDA - Placement Prediction Project</title>
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
     <style>
 
         * {
@@ -29,7 +31,7 @@
 
         .topbar {
             height: 86px;
-            background: #24466f;
+            background: #0b1e36;
             color: white;
 
             display: flex;
@@ -411,134 +413,8 @@
 <div class="layout">
 
 
-<!-- =====================================================
-     SIDEBAR
-===================================================== -->
-
-<nav class="sidebar">
-
-    <div class="sidebar-title">
-        Modules
-    </div>
-
-
-    <ul>
-
-        <li>
-
-            <a
-                href="{{ url_for('data_loading') }}"
-                class="{% if request.path == '/data-loading' %}active{% endif %}"
-            >
-                Data Loading
-            </a>
-
-        </li>
-
-
-        <li>
-
-            <a
-                href="{{ url_for('eda') }}"
-                class="{% if request.path == '/eda' %}active{% endif %}"
-            >
-                EDA
-            </a>
-
-        </li>
-
-
-        <li>
-
-            <a
-                href="{{ url_for('preprocessing') }}"
-                class="{% if request.path == '/preprocessing' %}active{% endif %}"
-            >
-                Preprocessing
-            </a>
-
-        </li>
-
-
-        <li>
-
-            <a
-                href="{{ url_for('linear_regression') }}"
-                class="{% if request.path == '/linear-regression' %}active{% endif %}"
-            >
-                Linear Regression
-            </a>
-
-        </li>
-
-
-        <li>
-
-            <a
-                href="{{ url_for('logistic_regression') }}"
-                class="{% if request.path == '/logistic-regression' %}active{% endif %}"
-            >
-                Logistic Regression
-            </a>
-
-        </li>
-
-
-        <li class="tree-menu">
-
-            <details>
-
-                <summary>
-                    Tree Based Algorithm
-                </summary>
-
-
-                <ul class="tree-submenu">
-
-                    <li>
-                        <a href="/decision-tree">
-                            Decision Tree
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/random-forest">
-                            Random Forest
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/bagging">
-                            Bagging
-                        </a>
-                    </li>
-
-                    <li>
-                        <a href="/boosting">
-                            Boosting
-                        </a>
-                    </li>
-
-                </ul>
-
-            </details>
-
-        </li>
-
-
-        <li>
-
-            <a class="disabled">
-                Prediction
-                <br>
-                (coming soon)
-            </a>
-
-        </li>
-
-    </ul>
-
-</nav>
+<!-- SIDEBAR -->
+{% include 'sidebar.html' %}
 <!-- =====================================================
      MAIN CONTENT
 ===================================================== -->

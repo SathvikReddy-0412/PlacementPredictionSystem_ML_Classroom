@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>K-Means Clustering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="topbar">
+        <h1>Placement Prediction Project</h1>
+    </header>
+
+    <div class="layout">
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+            <div class="page-header">
+                <h2>K-Means Clustering</h2>
+                <p class="subtitle">Unsupervised learning for identifying natural groups of students based on academic performance, coding test scores, and aptitude.</p>
+            </div>
+
+            {% if error %}
+                <div class="error-banner">{{ error }}</div>
+            {% endif %}
+
+            {% if kmeans %}
+            <!-- FORM CARD -->
+            <div class="dashboard-card">
+                <h3 class="card-title">Select K Selection Method</h3>
+                <p class="card-desc">Choose how the optimal number of clusters (K) should be determined.</p>
+
+                <form method="POST" action="/kmeans" class="filter-form">
+                    <div class="form-group">
+                        <label for="method">K Selection Method</label>
+                        <select name="method" id="method" class="form-control">
+                            <option value="Manual" {% if kmeans.method == 'Manual' %}selected{% endif %}>Manual K</option>
+                            <option value="Elbow" {% if kmeans.method == 'Elbow' %}selected{% endif %}>Elbow Method</option>
+                            <option value="Silhouette" {% if kmeans.method == 'Silhouette' %}selected{% endif %}>Silhouette Analysis</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="k">Select K</label>
+                        <select name="k" id="k" class="form-control">
+                            <option value="2" {% if kmeans.selected_k == 2 %}selected{% endif %}>2 Clusters</option>
+                            <option value="3" {% if kmeans.selected_k == 3 %}selected{% endif %}>3 Clusters</option>
+                            <option value="4" {% if kmeans.selected_k == 4 %}selected{% endif %}>4 Clusters</option>
+                            <option value="5" {% if kmeans.selected_k == 5 %}selected{% endif %}>5 Clusters</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-teal">Run K-Means</button>
+                </form>
+            </div>
+
+            <!-- K-MEANS RESULTS SECTION -->
+            <div class="results-section">
+                <h3 class="section-heading">K-Means Results</h3>
+                <p class="meta-label">Method used: <strong>{{ kmeans.method }}</strong></p>
+
+                <!-- METRICS GRID -->
+                <div class="metrics-grid">
+                    <div class="stat-card border-teal">
+                        <span class="stat-label">SELECTED K</span>
+                        <span class="stat-value">{{ kmeans.selected_k }}</span>
+                        <span class="stat-sub">Number of clusters</span>
+                    </div>
+
+                    <div class="stat-card border-teal">
+                        <span class="stat-label">WCSS / INERTIA</span>
+                        <span class="stat-value">{{ kmeans.wcss }}</span>
+                        <span class="stat-sub">Within-cluster variation</span>
+                    </div>
+
+                    <div class="stat-card border-teal">
+                        <span class="stat-label">SILHOUETTE SCORE</span>
+                        <span class="stat-value">{{ kmeans.silhouette_score }}</span>
+                        <span class="stat-sub">Cluster separation</span>
+                    </div>
+
+                    <div class="stat-card border-teal">
+                        <span class="stat-label">RECORDS</span>
+                        <span class="stat-value">{{ kmeans.total_records }}</span>
+                        <span class="stat-sub">Records clustered</span>
+                    </div>
+                </div>
+
+                <!-- K SELECTION ANALYSIS -->
+                <div class="analysis-box">
+                    <h4>K Selection Analysis</h4>
+                    <p>{{ kmeans.method }} Selection: K = {{ kmeans.selected_k }} was selected.</p>
+                </div>
+
+                <!-- CLUSTER DISTRIBUTION -->
+                <div class="distribution-section">
+                    <h4>Cluster Distribution</h4>
+                    <div class="distribution-grid">
+                        {% for item in kmeans.distribution %}
+                        <div class="cluster-dist-card">
+                            <div class="cluster-title">Cluster {{ item.cluster }}</div>
+                            <div class="cluster-count">{{ "{:,}".format(item.count) }}</div>
+                            <div class="cluster-unit">Students</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCATTER PLOT CARD -->
+            <div class="dashboard-card full-width">
+                <h3 class="card-title">Coding Test Score vs CGPA</h3>
+                <div class="chart-wrapper">
+                    <img src="{{ kmeans.chart_url }}" alt="K-Means Clusters Chart" class="responsive-chart">
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+</body>
+</html>

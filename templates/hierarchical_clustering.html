@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hierarchical Clustering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+    <header class="topbar">
+        <h1>Placement Prediction Project</h1>
+    </header>
+
+    <div class="layout">
+        {% include 'sidebar.html' %}
+
+        <main class="content">
+            <div class="page-header">
+                <h2>Hierarchical Clustering</h2>
+                <p class="subtitle">Agglomerative tree-based hierarchical clustering and dendrogram merge height analysis for student placement data.</p>
+            </div>
+
+            {% if error %}
+                <div class="error-banner">{{ error }}</div>
+            {% endif %}
+
+            {% if hierarchical %}
+            <!-- CONTROL FORM -->
+            <div class="dashboard-card">
+                <h3 class="card-title">Linkage & Cut Height Settings</h3>
+                <form method="POST" action="/hierarchical-clustering" class="filter-form">
+                    <div class="form-group">
+                        <label for="method">Linkage Method</label>
+                        <select name="method" id="method" class="form-control">
+                            <option value="ward" {% if hierarchical.linkage_method == 'Ward' %}selected{% endif %}>Ward</option>
+                            <option value="complete" {% if hierarchical.linkage_method == 'Complete' %}selected{% endif %}>Complete</option>
+                            <option value="average" {% if hierarchical.linkage_method == 'Average' %}selected{% endif %}>Average</option>
+                            <option value="single" {% if hierarchical.linkage_method == 'Single' %}selected{% endif %}>Single</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="k">Target Clusters (K)</label>
+                        <select name="k" id="k" class="form-control">
+                            <option value="2" {% if hierarchical.selected_k == 2 %}selected{% endif %}>2 Clusters</option>
+                            <option value="3" {% if hierarchical.selected_k == 3 %}selected{% endif %}>3 Clusters</option>
+                            <option value="4" {% if hierarchical.selected_k == 4 %}selected{% endif %}>4 Clusters</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn-teal">Run Hierarchical</button>
+                </form>
+            </div>
+
+            <!-- METRICS GRID -->
+            <div class="metrics-grid">
+                <div class="stat-card border-blue">
+                    <span class="stat-label">SELECTED K</span>
+                    <span class="stat-value">{{ hierarchical.selected_k }}</span>
+                    <span class="stat-sub">Target clusters</span>
+                </div>
+
+                <div class="stat-card border-teal">
+                    <span class="stat-label">LINKAGE METHOD</span>
+                    <span class="stat-value">{{ hierarchical.linkage_method }}</span>
+                    <span class="stat-sub">Distance criterion</span>
+                </div>
+
+                <div class="stat-card border-orange">
+                    <span class="stat-label">CUT HEIGHT</span>
+                    <span class="stat-value">{{ hierarchical.cut_height }}</span>
+                    <span class="stat-sub">Dendrogram threshold</span>
+                </div>
+
+                <div class="stat-card border-purple">
+                    <span class="stat-label">SILHOUETTE SCORE</span>
+                    <span class="stat-value">{{ hierarchical.silhouette_score }}</span>
+                    <span class="stat-sub">Cluster separation</span>
+                </div>
+            </div>
+
+            <!-- DENDROGRAM CARD -->
+            <div class="dashboard-card full-width">
+                <div class="card-section-tag">DENDROGRAM</div>
+                <div class="chart-wrapper">
+                    <img src="{{ hierarchical.dendrogram_url }}" alt="Hierarchical Dendrogram Chart" class="responsive-chart">
+                </div>
+            </div>
+
+            <!-- SCATTER PLOT CARD -->
+            <div class="dashboard-card full-width">
+                <h3 class="card-title">Hierarchical Clusters: Coding Test Score vs CGPA</h3>
+                <div class="chart-wrapper">
+                    <img src="{{ hierarchical.scatter_url }}" alt="Hierarchical Clusters Scatter Plot" class="responsive-chart">
+                </div>
+            </div>
+            {% endif %}
+        </main>
+    </div>
+
+</body>
+</html>
